@@ -1,7 +1,7 @@
 #!/bin/bash
 # ArchLinux install script
 
-partition() 
+startup() 
 {
   lsblk
   echo -e "\nOn which device you want to install Arch Linux? (e.g sda)\n"
@@ -14,8 +14,15 @@ partition()
     parted /dev/"$pname" set 1 boot on
   else
     echo -e "\nSelected device does not exist, installation interrupted.\n"
+    exit
   fi
   
+  efi_pname=/dev/"$pname"1
+  root=/dev/"$pname"2
+	
+  mount "$root" /mnt
+  mkdir /mnt/boot
+  mount "$efi_pname" /mnt/boot  
 }
 
-partition
+startup
