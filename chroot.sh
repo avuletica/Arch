@@ -73,8 +73,14 @@ configure_bootloader()
   mv arch.conf boot/loader/entries/arch.conf
 }
 
+install_essential_packages()
+{
+  pacman -S git vim openssh ntfs-3g bash-completion --noconfirm
+}
+
 setup_locale
 setup_timezone
 configure_users
 configure_bootloader
+install_essential_packages
 
