@@ -4,8 +4,16 @@ configure_users()
 {
 # Setup your hostname
   echo "Type desired hostname: "
-  read -r _hostname
-  echo "$_hostname" > /etc/hostname
+  read -r hostname
+  echo "$hostname"
+
+  while [ "$hostname" == "" ]; do
+    error_43
+    echo "Type desired hostname: "
+    read -r hostname
+  done
+
+  echo "$hostname" > /etc/hostname
 
 # Setting root password
   echo -e "\nType desired root password"
@@ -14,10 +22,17 @@ configure_users()
 # Creating user & setting password
   echo -e "\nCreating user & setting password...\n"
   echo "Type desired username: "
-  read -r _usrnm
-  useradd -m -g users -G wheel,storage,power -s /bin/bash "$_usrnm"
+  read -r usrnm
+
+  while [ "$usrnm" == "" ]; do
+    error_43
+    echo "Type desired username: "
+    read -r usrnm
+  done
+
+  useradd -m -g users -G wheel,storage,power -s /bin/bash "$usrnm"
   echo "Type password for user"
-  passwd "$_usrnm"
+  passwd "$usrnm"
   sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
 }
 
@@ -86,20 +101,17 @@ setup_desktop_env()
   echo -e "\nInstall desktop environment or window manager?\n"
   echo -e "1)de (default)\n2)wm"
   read -r first_choice
-  while [ "$first_choice" != "1" ] && [ "$first_choice" != "de" ] && [ "$first_choice" != "2" ] && [ "$first_choice" != "wm" ] && [ "$first_choice" != "" ]
-  do
+  while [ "$first_choice" != "1" ] && [ "$first_choice" != "de" ] && [ "$first_choice" != "2" ] && [ "$first_choice" != "wm" ] && [ "$first_choice" != "" ]; do
     error_42 $first_choice
     read -r first_choice
   done
 
-  if [ "$first_choice" == "wm" ] || [ "$first_choice" == "2" ]
-  then
+  if [ "$first_choice" == "wm" ] || [ "$first_choice" == "2" ]; then
     install_i3
     return 0;
   fi
 
-  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ]
-  then
+  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then
     echo -e "Choose desktop environment"
     echo -e "1)gnome (default)\n2)kde"
     read -r second_choice
