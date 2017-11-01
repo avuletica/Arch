@@ -12,6 +12,7 @@ startup()
     parted /dev/"$pname" mkpart primary fat32 1MiB 512MiB
     parted /dev/"$pname" mkpart primary ext4 512MiB 100%      
     parted /dev/"$pname" set 1 boot on
+    mkfs.ext4 /dev/"$pname"
   else
     echo -e "\nSelected device does not exist, installation interrupted.\n"
     exit
@@ -36,7 +37,13 @@ setup()
   cp chroot.sh /mnt
   chmod +x /mnt/chroot.sh
   arch-chroot /mnt ./chroot.sh
-  reboot
+  echo "Install finished, reboot (y,n)?"
+  read -r answer
+  if [ "$answer" == "y" ]; then
+    reboot
+  else
+    return 0
+  fi
 }
 
 startup
