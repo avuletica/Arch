@@ -35,8 +35,46 @@ setup_timezone()
 {
   ln -s /usr/share/zoneinfo/Europe/Zagreb > /etc/localtime
   hwclock --systohc --utc
-}  
+}
 
-configure_users
+configure_bootloader()
+{
+  vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
+  intel_cpu=false
+
+  if [[ $vendor == *"GenuineIntel"* ]]; then
+    pacman -S intel-ucode
+    intel_cpu=true
+  fi
+
+  bootctl --path=/boot install
+  touch loader.conf
+  echo "default arch" > loader.conf
+  echo "editor 0" >> loader.conf
+  mv loader.conf boot/loader/loader.conf
+
+  touch arch.conf
+  options="options root=PARTUUID="
+  if [ $intel_cpu ]; then
+    echo "title Arch Linux" > arch.conf
+    echo "linux /vmlinuz-linux" >> arch.conf
+    echo "initrd /intel-ucode.img" >> arch.conf
+    echo "initrd /initramfs-linux.img" >> arch.conf
+    partuuid=$(lsblk -no UUID $root)
+    echo $options$partuuid "rw" >> arch.conf
+  else
+    echo "title Arch Linux" > arch.conf
+    echo "linux /vmlinuz-linux" >> arch.conf
+    echo "initrd /initramfs-linux.img" >> arch.conf
+    partuuid=$(lsblk -no UUID $root)
+    echo $options$partuuid "rw" >> arch.conf
+  fi
+
+  mv arch.conf boot/loader/entries/arch.conf
+}
+
 setup_locale
 setup_timezone
+configure_users
+configure_bootloader
+
