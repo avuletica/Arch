@@ -24,7 +24,7 @@ configure_users()
 setup_locale()
 {
 	old="\#en_US.UTF-8 UTF-8"
-		new="en_US.UTF-8 UTF-8"
+	new="en_US.UTF-8 UTF-8"
 	location="/etc/locale.gen"
 	sed -i "s/$old/$new/" $location
 	locale-gen
@@ -87,7 +87,6 @@ setup_desktop_env()
 	echo -e "1)de (default)\n2)wm"
 	read -r first_choice
 
-
 	while [ "$first_choice" != "1" ] && [ "$first_choice" != "de" ] && [ "$first_choice" != "2" ] && [ "$first_choice" != "wm" ] && [ "$first_choice" != "" ]
 	do
 		error_42 $first_choice
@@ -112,7 +111,6 @@ setup_desktop_env()
 		2|kde)  install_kde;;
 		*)  install_gnome;;
 	esac
-
 }
 
 install_gnome()
