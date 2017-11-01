@@ -21,4 +21,22 @@ configure_users()
     sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
 }
 
+setup_locale()
+{    
+  old="\#en_US.UTF-8 UTF-8"
+  new="en_US.UTF-8 UTF-8"
+  location="/etc/locale.gen"
+  sed -i "s/$old/$new/" $location    
+  locale-gen
+  echo LANG=en_US.UTF­8 > /etc/locale.conf  
+}
+
+setup_timezone() 
+{
+  ln -s /usr/share/zoneinfo/Europe/Zagreb > /etc/localtime
+  hwclock --systohc --utc
+}  
+
 configure_users
+setup_locale
+setup_timezone
