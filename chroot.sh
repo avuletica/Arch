@@ -4,8 +4,7 @@ configure_users()
 {
 # Setup your hostname
   echo "Type desired hostname: "
-  read -r hostname
-  echo "$hostname"
+  read -r hostname  
 
   while [ "$hostname" == "" ]; do
     error_43
@@ -31,7 +30,7 @@ configure_users()
   done
 
   useradd -m -g users -G wheel,storage,power -s /bin/bash "$usrnm"
-  echo "Type password for user"
+  echo "Type password for user $usrnm"
   passwd "$usrnm"
   sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
 }
@@ -58,7 +57,7 @@ configure_bootloader()
   intel_cpu=false
 
   if [[ $vendor == *"GenuineIntel"* ]]; then
-    pacman -S intel-ucode
+    pacman -S intel-ucode --noconfirm
     intel_cpu=true
   fi
 
@@ -75,17 +74,17 @@ configure_bootloader()
     echo "linux /vmlinuz-linux" >> arch.conf
     echo "initrd /intel-ucode.img" >> arch.conf
     echo "initrd /initramfs-linux.img" >> arch.conf
-    partuuid=$(lsblk -no UUID $root)
+    partuuid=$(blkid -s PARTUUID -o value $root)
     echo $options$partuuid "rw" >> arch.conf
   else
     echo "title Arch Linux" > arch.conf
     echo "linux /vmlinuz-linux" >> arch.conf
     echo "initrd /initramfs-linux.img" >> arch.conf
-    partuuid=$(lsblk -no UUID $root)
+    partuuid=$(blkid -s PARTUUID -o value $root)
     echo $options$partuuid "rw" >> arch.conf
   fi
 
-  mv arch.conf boot/loader/entries/arch.conf
+  mv arch.conf boot/loader/entries/arch.conf  
 }
 
 install_essential_packages()
@@ -129,6 +128,7 @@ install_gnome()
   pacman -S gnome gnome-tweak-tool --noconfirm
   pacman -S file-roller unrar lrzip --noconfirm
   systemctl enable gdm
+  systemctl enable NetworkManager
 }
 
 install_kde()
