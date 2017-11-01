@@ -19,23 +19,24 @@ startup()
   
   efi_pname=/dev/"$pname"1
   root=/dev/"$pname"2
+  export root
 	
   mount "$root" /mnt
   mkdir /mnt/boot
   mount "$efi_pname" /mnt/boot  
 
-  setup
+  setup $root
 }
 
 setup()
 {
-    pacstrap /mnt base base-devel
-    genfstab -U -p /mnt >> /mnt/etc/fstab
-    wget https://raw.githubusercontent.com/avuletica/Arch/master/chroot.sh
-    cp chroot.sh /mnt
-    chmod +x /mnt/chroot.sh
-    arch-chroot /mnt ./chroot.sh
-    reboot
+  pacstrap /mnt base base-devel
+  genfstab -U -p /mnt >> /mnt/etc/fstab
+  wget https://raw.githubusercontent.com/avuletica/Arch/master/chroot.sh
+  cp chroot.sh /mnt
+  chmod +x /mnt/chroot.sh
+  arch-chroot /mnt ./chroot.sh
+  reboot
 }
 
 startup
