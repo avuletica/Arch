@@ -151,6 +151,11 @@ error_42()
   esac
 }
 
+error_43()
+{
+  echo "Invalid name, please try again."
+}
+
 setup_locale
 setup_timezone
 configure_users
