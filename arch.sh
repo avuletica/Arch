@@ -1,5 +1,4 @@
 #!/bin/bash
-# ArchLinux install script
 
 startup()
 {
@@ -35,9 +34,9 @@ setup()
   pacstrap /mnt base base-devel
   genfstab -U -p /mnt >> /mnt/etc/fstab
   wget https://raw.githubusercontent.com/avuletica/Arch/master/chroot.sh
-  cp chroot.sh /mnt
+  cp ./chroot.sh /mnt
   chmod +x /mnt/chroot.sh
-  arch-chroot /mnt chroot.sh
+  arch-chroot /mnt ./chroot.sh
   echo "Install finished, reboot (y,n)?"
   read -r answer
   if [ "$answer" == "y" ]; then
@@ -48,4 +47,3 @@ setup()
 }
 
 startup
-
