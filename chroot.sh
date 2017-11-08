@@ -109,8 +109,7 @@ setup_desktop_env()
     return 0;
   fi
 
-  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then
-    read -r second_choice
+  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then    
     while [ "$second_choice" != "1" ] && [ "$second_choice" != "gnome" ] && [ "$second_choice" != "2" ] && [ "$second_choice" != "kde" ] && [ "$second_choice" != "" ]; do
       echo -e "Choose desktop environment"
       echo -e "1)gnome (default)\n2)kde"
@@ -179,7 +178,7 @@ error_42()
 {
   case $first_choice in
     1|2|de|wm|"") return 0;;
-    *) echo -e "Error 42 - Invalid choice\n1)de (default)\n2)wm"
+    *) echo -e "\nError 42 - Invalid choice\n1)de (default)\n2)wm"
   esac
 }
 
