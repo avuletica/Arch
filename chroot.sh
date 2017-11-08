@@ -12,8 +12,7 @@ configure_users()
     read -r hostname
   done
 
-  echo "$hostname" > /etc/hostname
-  
+  echo "$hostname" > /etc/hostname  
 
 # Setting root password
   echo -e "\nType desired root password"
@@ -174,8 +173,7 @@ install_custom_packages()
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
   
   pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme  
-  sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
-     
+  sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers     
 }
 
 error_42()
