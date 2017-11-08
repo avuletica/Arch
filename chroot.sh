@@ -13,6 +13,7 @@ configure_users()
   done
 
   echo "$hostname" > /etc/hostname
+  
 
 # Setting root password
   echo -e "\nType desired root password"
@@ -32,7 +33,9 @@ configure_users()
   useradd -m -g users -G wheel,storage,power -s /bin/bash "$usrnm"
   echo "Type password for user $usrnm"
   passwd "$usrnm"
-  sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
+  export usrnm
+  sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers  
+  sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
 }
 
 setup_locale()
@@ -47,7 +50,7 @@ setup_locale()
 
 setup_timezone()
 {
-  ln -s /usr/share/zoneinfo/Europe/Zagreb > /etc/localtime
+  ln -sf /usr/share/zoneinfo/Europe/Zagreb /etc/localtime
   hwclock --systohc --utc
 }
 
@@ -121,12 +124,23 @@ setup_desktop_env()
     2|kde)  install_kde;;
     *)  install_gnome;;
   esac
+  
+  echo "Install custom packages (Y,n)?"
+  read -r answer_custom_install
+  while [ "$answer_custom_install" != "y" ] && [ "$answer_custom_install" != "n" ] && [ "$answer_custom_install" != "" ]; do
+    error_44
+    read -r answer_custom_install
+  done
+  if [ "$answer_custom_install" == "y" ] || [ "$answer_custom_install" == "" ] ;  then
+    install_custom_packages
+  fi
 }
 
 install_gnome()
 {
   pacman -S gnome gnome-tweak-tool --noconfirm
   pacman -S file-roller unrar lrzip --noconfirm
+  pacman -S gedit transmission-gtk --noconfirm
   systemctl enable gdm
   systemctl enable NetworkManager
 }
@@ -136,6 +150,7 @@ install_kde()
   pacman -S plasma konsole dolphin --noconfirm
   pacman -S gwenview okular ffmpegthumbs --noconfirm
   systemctl enable sddm
+  systemctl enable NetworkManager
 }
 
 install_i3()
@@ -143,9 +158,29 @@ install_i3()
   echo "TBA"
 }
 
+install_custom_packages()
+{  
+  su -c "gpg --recv-keys 1EB2638FF56C0C53" -s /bin/sh "$usrnm"
+    
+  git clone https://aur.archlinux.org/cower.git /tmp/cower 
+  git clone https://aur.archlinux.org/pacaur.git /tmp/pacaur
+  
+  chown -R "$usrnm" /tmp/cower
+  chown -R "$usrnm" /tmp/pacaur
+    
+  cd /tmp/cower 
+  su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
+  cd /tmp/pacaur
+  su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
+  
+  pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme  
+  sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+     
+}
+
 error_42()
 {
-  case $second_choice in
+  case $first_choice in
     1|2|de|wm|"")  return 0;;
     *)  echo "Error 42 - Invalid choice"
   esac
@@ -156,10 +191,15 @@ error_43()
   echo "Invalid name, please try again."
 }
 
+error_44()
+{
+  echo "Invalid choice"
+  echo "Install custom packages (Y,n)?"
+}
+
 setup_locale
 setup_timezone
 configure_users
 configure_bootloader
 install_essential_packages
 setup_desktop_env
-
