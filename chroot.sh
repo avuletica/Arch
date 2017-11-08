@@ -96,9 +96,6 @@ install_essential_packages()
 
 setup_desktop_env()
 {
-  local first_choice="de"
-  local second_choice="gnome"
-
   echo -e "\nInstall desktop environment or window manager?\n"
   echo -e "1)de (default)\n2)wm"
   read -r first_choice
@@ -113,15 +110,17 @@ setup_desktop_env()
   fi
 
   if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then
-    echo -e "Choose desktop environment"
-    echo -e "1)gnome (default)\n2)kde"
     read -r second_choice
+    while [ "$second_choice" != "1" ] && [ "$second_choice" != "gnome" ] && [ "$second_choice" != "2" ] && [ "$second_choice" != "kde" ] && [ "$second_choice" != "" ]; do
+      echo -e "Choose desktop environment"
+      echo -e "1)gnome (default)\n2)kde"
+      read -r second_choice
+    done
   fi
 
   case $second_choice in
-    1|gnome)  install_gnome;;
+    1|gnome|"")  install_gnome;;
     2|kde)  install_kde;;
-    *)  install_gnome;;
   esac
 
   echo "Install custom packages (Y,n)?"
