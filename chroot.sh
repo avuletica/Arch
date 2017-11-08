@@ -169,7 +169,7 @@ install_custom_packages()
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
-  su -c "numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme --noconfirm" -s /bin/sh "$usrnm"
+  su -c "pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme --noconfirm" -s /bin/sh "$usrnm"
   
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
