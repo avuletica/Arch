@@ -4,7 +4,7 @@ configure_users()
 {
 # Setup your hostname
   echo "Type desired hostname: "
-  read -r hostname  
+  read -r hostname
 
   while [ "$hostname" == "" ]; do
     error_43
@@ -12,7 +12,7 @@ configure_users()
     read -r hostname
   done
 
-  echo "$hostname" > /etc/hostname  
+  echo "$hostname" > /etc/hostname
 
 # Setting root password
   echo -e "\nType desired root password"
@@ -33,8 +33,8 @@ configure_users()
   echo "Type password for user $usrnm"
   passwd "$usrnm"
   export usrnm
-  sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers  
-  sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers  
+  sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers
+  sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
 
 setup_locale()
@@ -86,7 +86,7 @@ configure_bootloader()
     echo $options$partuuid "rw" >> arch.conf
   fi
 
-  mv arch.conf boot/loader/entries/arch.conf  
+  mv arch.conf boot/loader/entries/arch.conf
 }
 
 install_essential_packages()
@@ -123,7 +123,7 @@ setup_desktop_env()
     2|kde)  install_kde;;
     *)  install_gnome;;
   esac
-  
+
   echo "Install custom packages (Y,n)?"
   read -r answer_custom_install
   while [ "$answer_custom_install" != "y" ] && [ "$answer_custom_install" != "n" ] && [ "$answer_custom_install" != "" ]; do
@@ -158,22 +158,22 @@ install_i3()
 }
 
 install_custom_packages()
-{  
+{
   su -c "gpg --recv-keys 1EB2638FF56C0C53" -s /bin/sh "$usrnm"
-    
-  git clone https://aur.archlinux.org/cower.git /tmp/cower 
+
+  git clone https://aur.archlinux.org/cower.git /tmp/cower
   git clone https://aur.archlinux.org/pacaur.git /tmp/pacaur
-  
+
   chown -R "$usrnm" /tmp/cower
   chown -R "$usrnm" /tmp/pacaur
-    
-  cd /tmp/cower 
+
+  cd /tmp/cower
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
-  
-  pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme  
-  sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers     
+
+  pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme
+  sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
 
 error_42()
