@@ -178,8 +178,8 @@ install_custom_packages()
 error_42()
 {
   case $first_choice in
-    1|2|de|wm|"")  return 0;;
-    *)  echo "Error 42 - Invalid choice"
+    1|2|de|wm|"") return 0;;
+    *) echo -e "Error 42 - Invalid choice\n1)de (default)\n2)wm"
   esac
 }
 
