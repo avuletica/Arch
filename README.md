@@ -14,4 +14,13 @@ Custom Arch Linux installation (shell) script
     * To provide username & password for root and user. 
     * Choice for desktop environment (Cinnamon, KDE, GNOME, XFCE) or window manager (i3)
     * Choice to install custom packages (pacaur etc.)
+      
+## Task list
+
+- [x] kde
+- [ ] xfce
+- [x] gnome
+- [ ] cinnamon
+- [ ] i3
+- [ ] dual-boot installation
 
