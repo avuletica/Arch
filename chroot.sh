@@ -2,29 +2,25 @@
 
 configure_users()
 {
-# Setup your hostname
   echo "Type desired hostname: "
   read -r hostname
 
   while [ "$hostname" == "" ]; do
-    error_43
+    error_45
     echo "Type desired hostname: "
     read -r hostname
   done
 
   echo "$hostname" > /etc/hostname
-
-# Setting root password
   echo -e "\nType desired root password"
   passwd
 
-# Creating user & setting password
   echo -e "\nCreating user & setting password...\n"
   echo "Type desired username: "
   read -r usrnm
 
   while [ "$usrnm" == "" ]; do
-    error_43
+    error_45
     echo "Type desired username: "
     read -r usrnm
   done
@@ -96,12 +92,16 @@ install_essential_packages()
 
 setup_desktop_env()
 {
-  echo -e "\nInstall desktop environment or window manager?\n"
-  echo -e "1)de (default)\n2)wm"
-  read -r first_choice
-  while [ "$first_choice" != "1" ] && [ "$first_choice" != "de" ] && [ "$first_choice" != "2" ] && [ "$first_choice" != "wm" ] && [ "$first_choice" != "" ]; do
-    error_42 $first_choice
-    read -r first_choice
+  local option_chosen     
+ 
+  display_message_1
+  read -r first_choice  
+  option_chosen=$(error_42 $first_choice)
+  
+  while [ "$option_chosen" == "-1" ]; do
+    display_message_1
+    read -r first_choice   
+    option_chosen=$(error_42 $first_choice)       
   done
 
   if [ "$first_choice" == "wm" ] || [ "$first_choice" == "2" ]; then
@@ -109,17 +109,22 @@ setup_desktop_env()
     return 0;
   fi
 
-  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then    
-    while [ "$second_choice" != "1" ] && [ "$second_choice" != "gnome" ] && [ "$second_choice" != "2" ] && [ "$second_choice" != "kde" ] && [ "$second_choice" != "" ]; do
-      echo -e "Choose desktop environment"
-      echo -e "1)gnome (default)\n2)kde"
+  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then
+    display_message_2
+    read -r second_choice 
+    option_chosen=$(error_43 $second_choice)  
+    while [ "$option_chosen" == "-1"  ]; do
+      display_message_2 
       read -r second_choice
+      option_chosen=$(error_43 $second_choice)      
     done
   fi
 
   case $second_choice in
     1|gnome|"")  install_gnome;;
     2|kde)  install_kde;;
+    3|cinnamon)  install_cinnamon;;
+    4|xfce)  install_xfce;;
   esac
 
   echo "Install custom packages (Y,n)?"
@@ -150,6 +155,20 @@ install_kde()
   systemctl enable NetworkManager
 }
 
+install_xfce()
+{
+    pacman -S xfce4 --noconfirm
+    systemctl enable lightdm
+    systemctl enable NetworkManager
+}
+
+install_cinnamon()
+{
+    pacman -S cinnamon --noconfirm
+    systemctl enable lightdm
+    systemctl enable NetworkManager
+}
+
 install_i3()
 {
   echo "TBA"
@@ -175,22 +194,42 @@ install_custom_packages()
 }
 
 error_42()
-{
+{  
   case $first_choice in
-    1|2|de|wm|"") return 0;;
-    *) echo -e "\nError 42 - Invalid choice\n1)de (default)\n2)wm"
-  esac
+    1|2|de|wm|"") echo 0;;
+    *) echo -1;;
+  esac  
 }
 
 error_43()
-{
-  echo "Invalid name, please try again."
+{  
+  case $second_choice in
+    1|2|3|4|gnome|kde|xfce|cinnamon|"") echo 0;;
+    *) echo -1;;
+  esac  
 }
 
 error_44()
 {
   echo "Invalid choice"
   echo "Install custom packages (Y,n)?"
+}
+
+error_45()
+{
+  echo "Invalid name, please try again."
+}
+
+display_message_1()
+{
+  echo -e "\nInstall desktop environment or window manager?\n"
+  echo -e "1)de (default)\n2)wm" 
+}
+
+display_message_2()
+{
+  echo -e "\nChoose desktop environment"
+  echo -e "1)gnome (default)\n2)kde\n3)cinnamon\n4)xfce" 
 }
 
 setup_locale

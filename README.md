@@ -20,10 +20,10 @@ Custom Arch Linux installation (shell) script
 ## Project status
 |Description|Name|Supported|Tested|
 |:----------|:----------|:----------|:----------|
-|desktop environment|xfce|no|no|
+|desktop environment|xfce|yes|no|
 |desktop environment|kde|yes|no|
 |desktop environment|gnome|yes|yes|
-|desktop environment|cinnamon|no|no|
+|desktop environment|cinnamon|yes|no|
 |window manager|i3|no|no|
 |window manager|i3-sway|no|no|
 |utility|dual-boot|no|no|
