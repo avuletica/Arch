@@ -12,15 +12,17 @@ Custom Arch Linux installation (shell) script
 * During instalation you will be asked following:
     * To choose Linux partition. 
     * To provide username & password for root and user. 
-    * Choice for desktop environment (Cinnamon, KDE, GNOME, XFCE) or window manager (i3)
+    * Choice for desktop environment
     * Choice to install custom packages (pacaur etc.)
       
-## Task list
 
-- [x] kde
-- [ ] xfce
-- [x] gnome
-- [ ] cinnamon
-- [ ] i3
-- [ ] dual-boot installation
-
+## Project status
+|Description|Name|Supported|Tested|
+|:----------|:----------|:----------|:----------|
+|desktop environment|xfce|no|no|
+|desktop environment|kde|yes|no|
+|desktop environment|gnome|yes|yes|
+|desktop environment|cinnamon|no|no|
+|window manager|i3|no|no|
+|window manager|i3-sway|no|no|
+|utility|dual-boot|no|no|
