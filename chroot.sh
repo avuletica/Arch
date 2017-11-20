@@ -50,6 +50,19 @@ setup_timezone()
 }
 
 configure_bootloader()
+{   
+    firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)
+    if [  "$firmware" == "BIOS"  ]
+    then        
+        pacman -S grub os-prober --noconfirm        
+        grub-install --target=i386-pc "/dev/$disk"
+        grub-mkconfig -o /boot/grub/grub.cfg       
+    else    
+        configure_systemd        
+    fi    
+}
+
+configure_systemd()
 {
   vendor=$(cat /proc/cpuinfo | grep vendor | uniq)
   intel_cpu=false
@@ -188,7 +201,7 @@ install_custom_packages()
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
   su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
-  su -c "pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme --noconfirm" -s /bin/sh "$usrnm"
+  pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme --noconfirm
   
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
