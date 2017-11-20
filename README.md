@@ -1,7 +1,7 @@
 # Introduction
 Custom Arch Linux installation (shell) script 
 
-<img src="https://github.com/avuletica/Arch/blob/development/images/sample.gif" width="535" height="365">
+<img src="https://github.com/avuletica/Arch/blob/master/images/sample.gif" width="535" height="365">
 
 ## How to use
 * [Download arch-iso from official site](https://www.archlinux.org/download/)
@@ -26,4 +26,6 @@ Custom Arch Linux installation (shell) script
 |desktop environment|cinnamon|yes|no|
 |window manager|i3|no|no|
 |window manager|i3-sway|no|no|
+|firmware|UEFI with systemd|yes|yes|
+|firmware|BIOS with grub|yes|yes|
 |utility|dual-boot|no|no|
