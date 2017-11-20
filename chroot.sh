@@ -6,7 +6,7 @@ configure_users()
   read -r hostname
 
   while [ "$hostname" == "" ]; do
-    error_45
+    display_message_4
     echo "Type desired hostname: "
     read -r hostname
   done
@@ -20,7 +20,7 @@ configure_users()
   read -r usrnm
 
   while [ "$usrnm" == "" ]; do
-    error_45
+    display_message_4
     echo "Type desired username: "
     read -r usrnm
   done
@@ -40,7 +40,7 @@ setup_locale()
   location="/etc/locale.gen"
   sed -i "s/$old/$new/" $location
   locale-gen
-  echo LANG=en_US.UTF­8 > /etc/locale.conf
+  echo "LANG=en_US.UTF­8" > "/etc/locale.conf"
 }
 
 setup_timezone()
@@ -109,31 +109,31 @@ setup_desktop_env()
  
   display_message_1
   read -r first_choice  
-  option_chosen=$(error_42 $first_choice)
+  option_chosen=$(error_1 $option_1)
   
   while [ "$option_chosen" == "-1" ]; do
     display_message_1
     read -r first_choice   
-    option_chosen=$(error_42 $first_choice)       
+    option_chosen=$(error_1 $option_1)       
   done
 
-  if [ "$first_choice" == "wm" ] || [ "$first_choice" == "2" ]; then
+  if [ "$option_1" == "wm" ] || [ "$option_1" == "2" ]; then
     install_i3
     return 0;
   fi
 
-  if [ "$first_choice" == "de" ] || [ "$first_choice" == "1" ] || [ "$first_choice" == "" ];  then
+  if [ "$option_1" == "de" ] || [ "$option_1" == "1" ] || [ "$option_1" == "" ];  then
     display_message_2
     read -r second_choice 
-    option_chosen=$(error_43 $second_choice)  
+    option_chosen=$(error_2 $option_2)  
     while [ "$option_chosen" == "-1"  ]; do
       display_message_2 
       read -r second_choice
-      option_chosen=$(error_43 $second_choice)      
+      option_chosen=$(error_2 $option_2)      
     done
   fi
 
-  case $second_choice in
+  case $option_2 in
     1|gnome|"")  install_gnome;;
     2|kde)  install_kde;;
     3|cinnamon)  install_cinnamon;;
@@ -142,11 +142,14 @@ setup_desktop_env()
 
   echo "Install custom packages (Y,n)?"
   read -r answer_custom_install
-  while [ "$answer_custom_install" != "y" ] && [ "$answer_custom_install" != "n" ] && [ "$answer_custom_install" != "" ]; do
-    error_44
+  option_chosen=$(error_3 $option_3)
+
+  while [ "$option_chosen" == "-1" ]; do
+    display_message_3
     read -r answer_custom_install
   done
-  if [ "$answer_custom_install" == "y" ] || [ "$answer_custom_install" == "" ] ;  then
+
+  if [ "$option_3" != "Y" ] && [ "$option_3" == "y" ] || [ "$option_3" == "" ] ;  then
     install_custom_packages
   fi
 }
@@ -206,31 +209,28 @@ install_custom_packages()
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
 
-error_42()
+error_1()
 {  
-  case $first_choice in
+  case $option_1 in
     1|2|de|wm|"") echo 0;;
     *) echo -1;;
   esac  
 }
 
-error_43()
+error_2()
 {  
-  case $second_choice in
+  case $option_2 in
     1|2|3|4|gnome|kde|xfce|cinnamon|"") echo 0;;
     *) echo -1;;
   esac  
 }
 
-error_44()
+error_3()
 {
-  echo "Invalid choice"
-  echo "Install custom packages (Y,n)?"
-}
-
-error_45()
-{
-  echo "Invalid name, please try again."
+  case $option_3 in
+    Y|y|n|N|"") echo 0;;
+    *) echo -1;;
+  esac
 }
 
 display_message_1()
@@ -243,6 +243,17 @@ display_message_2()
 {
   echo -e "\nChoose desktop environment"
   echo -e "1)gnome (default)\n2)kde\n3)cinnamon\n4)xfce" 
+}
+
+display_message_3()
+{
+  echo "Invalid choice"
+  echo "Install custom packages (Y,n)?"
+}
+
+display_message_4()
+{
+    echo "Invalid (empty) name, please try again."
 }
 
 setup_locale

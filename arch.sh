@@ -54,6 +54,7 @@ setup()
   echo "Install finished, reboot (y,n)?"
   read -r answer
   if [ "$answer" == "y" ]; then
+    umount -R /mnt
     reboot
   else
     return 0
