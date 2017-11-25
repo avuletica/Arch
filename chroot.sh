@@ -192,18 +192,16 @@ install_i3()
 
 install_custom_packages()
 {
-  su -c "gpg --recv-keys 1EB2638FF56C0C53" -s /bin/sh "$usrnm"
-
   git clone https://aur.archlinux.org/cower.git /tmp/cower
   git clone https://aur.archlinux.org/pacaur.git /tmp/pacaur
 
   chown -R "$usrnm" /tmp/cower
-  chown -R "$usrnm" /tmp/pacaur
+  chown -R "$usrnm" /tmp/pacaur 
 
   cd /tmp/cower
-  su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
+  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
-  su -c "makepkg -si --noconfirm" -s /bin/sh "$usrnm"
+  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
   pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme --noconfirm
   
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
