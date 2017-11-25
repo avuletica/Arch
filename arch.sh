@@ -10,11 +10,18 @@ startup()
   root=/dev/"$disk"2
   export efi_pname
   export root
-  export disk  
+  export disk
+1
+  echo "(Optional) Do you wish to securely wipe disk (Y,n)?"
+  read secure_wipe
+
+  if [ "secure_wipe" != "Y" ] || [ "secure_wipe" == "y" ] || [ "secure_wipe" == "" ];
+  then
+    dd if=/dev/zero of=/dev/"$disk" bs=4096
+  fi
 
   if [ -b /dev/"$disk" ];
   then
-    dd if=/dev/zero of=/dev/"$disk" bs=4096    
     firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)    
     if [  "$firmware" == "UEFI"  ]
     then

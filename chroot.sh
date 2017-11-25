@@ -149,7 +149,7 @@ setup_desktop_env()
     read -r answer_custom_install
   done
 
-  if [ "$option_3" != "Y" ] && [ "$option_3" == "y" ] || [ "$option_3" == "" ] ;  then
+  if [ "$option_3" != "Y" ] || [ "$option_3" == "y" ] || [ "$option_3" == "" ] ;  then
     install_custom_packages
   fi
 }
