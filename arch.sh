@@ -12,7 +12,9 @@ startup()
   export root
   export disk  
 
-  if [ -b /dev/"$disk" ]; then  
+  if [ -b /dev/"$disk" ];
+  then
+    dd if=/dev/zero of=/dev/"$disk" bs=4096    
     firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)    
     if [  "$firmware" == "UEFI"  ]
     then
