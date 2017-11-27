@@ -6,7 +6,7 @@ configure_users()
   read -r hostname
 
   while [ "$hostname" == "" ]; do
-    display_message_4
+    display_message_3
     echo "Type desired hostname: "
     read -r hostname
   done
@@ -20,7 +20,7 @@ configure_users()
   read -r usrnm
 
   while [ "$usrnm" == "" ]; do
-    display_message_4
+    display_message_3
     echo "Type desired username: "
     read -r usrnm
   done
@@ -139,19 +139,8 @@ setup_desktop_env()
     3|cinnamon)  install_cinnamon;;
     4|xfce)  install_xfce;;
   esac
-
-  echo "Install custom packages (Y,n)?"
-  read -r answer_custom_install
-  option_chosen=$(error_3 $option_3)
-
-  while [ "$option_chosen" == "-1" ]; do
-    display_message_3
-    read -r answer_custom_install
-  done
-
-  if [ "$option_3" != "Y" ] || [ "$option_3" == "y" ] || [ "$option_3" == "" ] ;  then
-    install_custom_packages
-  fi
+  
+  install_package_manager
 }
 
 install_gnome()
@@ -190,7 +179,7 @@ install_i3()
   echo "TBA"
 }
 
-install_custom_packages()
+install_package_manager()
 {
   git clone https://aur.archlinux.org/cower.git /tmp/cower
   git clone https://aur.archlinux.org/pacaur.git /tmp/pacaur
@@ -199,10 +188,9 @@ install_custom_packages()
   chown -R "$usrnm" /tmp/pacaur 
 
   cd /tmp/cower
-  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
+  makepkg --skippgpcheck -si --noconfirm
   cd /tmp/pacaur
-  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
-  pacaur -S numix-circle-icon-theme-git numix-folders-git adapta-gtk-theme --noconfirm
+  makepkg --skippgpcheck -si --noconfirm  
   
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
@@ -223,13 +211,6 @@ error_2()
   esac  
 }
 
-error_3()
-{
-  case $option_3 in
-    Y|y|n|N|"") echo 0;;
-    *) echo -1;;
-  esac
-}
 
 display_message_1()
 {
@@ -244,12 +225,6 @@ display_message_2()
 }
 
 display_message_3()
-{
-  echo "Invalid choice"
-  echo "Install custom packages (Y,n)?"
-}
-
-display_message_4()
 {
     echo "Invalid (empty) name, please try again."
 }
