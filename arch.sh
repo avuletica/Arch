@@ -9,18 +9,18 @@ startup()
   efi_pname="/dev/$disk"
   root="/dev/$disk"
   
-  if [ "$disk" == "sd*" ];
-  then
+  if [[ $disk == "sd"* ]]; 
+  then  
     efi_pname+="1"
     root+="2"
-  elif [ "$disk" == "nvme*" ]
-  then
+  elif [[ $disk == "nvme"* ]]; 
+  then  
     efi_pname+="p1"
     root+="p2"
   else
     echo "Device not supported, installation interrupted."
     exit
-  fi  
+  fi    
   
   export efi_pname
   export root
