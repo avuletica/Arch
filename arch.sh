@@ -13,7 +13,8 @@ startup()
   then
     efi_pname+="1"
     root+="2"
-  else if [ "$disk" == "nvme*" ]
+  elif [ "$disk" == "nvme*" ]
+  then
     efi_pname+="p1"
     root+="p2"
   else
