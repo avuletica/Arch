@@ -76,8 +76,7 @@ setup()
   arch-chroot /mnt ./chroot.sh
   echo "Install finished, reboot (y,n)?"
   read -r answer
-  if [ "$answer" == "y" ]; then
-    exit
+  if [ "$answer" == "y" ]; then    
     umount -R /mnt
     reboot
   else
