@@ -26,12 +26,12 @@ startup()
   export root
   export disk
 
-  echo "(Optional) Do you wish to securely wipe disk (Y,n)?"
+  echo "(Optional) Do you wish to securely wipe disk (y,N)?"
   read secure_wipe
 
-  if [ "secure_wipe" != "Y" ] || [ "secure_wipe" == "y" ] || [ "secure_wipe" == "" ];
+  if [ "secure_wipe" == "Y" ] || [ "secure_wipe" == "y" ];
   then
-    dd if=/dev/zero of=/dev/"$disk" bs=4096
+    dd if=/dev/zero of="/dev/$disk" bs=4096
   fi
 
   if [ -b /dev/"$disk" ];
