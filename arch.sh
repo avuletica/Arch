@@ -16,6 +16,9 @@ startup()
   else if [ "$disk" == "nvme*" ]
     efi_pname+="p1"
     root+="p2"
+  else
+    echo "Device not supported, installation interrupted."
+    exit
   fi  
   
   export efi_pname
