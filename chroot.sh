@@ -188,9 +188,9 @@ install_package_manager()
   chown -R "$usrnm" /tmp/pacaur 
 
   cd /tmp/cower
-  makepkg --skippgpcheck -si --noconfirm
+  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
-  makepkg --skippgpcheck -si --noconfirm  
+  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm" 
   
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
