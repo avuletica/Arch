@@ -6,12 +6,22 @@ startup()
   echo -e "\nOn which device you want to install Arch Linux? (e.g sda)\n"
   read -r disk
   
-  efi_pname=/dev/"$disk"1
-  root=/dev/"$disk"2
+  efi_pname="/dev/$disk"
+  root="/dev/$disk"
+  
+  if [ "$disk" == "sd*" ];
+  then
+    efi_pname+="1"
+    root+="2"
+  else if [ "$disk" == "nvme*" ]
+    efi_pname+="p1"
+    root+="p2"
+  fi  
+  
   export efi_pname
   export root
   export disk
-1
+
   echo "(Optional) Do you wish to securely wipe disk (Y,n)?"
   read secure_wipe
 
@@ -25,12 +35,11 @@ startup()
     firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)    
     if [  "$firmware" == "UEFI"  ]
     then
-        parted /dev/"$disk" mklabel GPT
+        parted "/dev/$disk" mklabel GPT
         pratition             
     else
-        parted /dev/"$disk" mklabel msdos
-        pratition
-        set 1 boot on       
+        parted "/dev/$disk" mklabel msdos
+        pratition              
     fi    
   else
     echo -e "\nSelected device does not exist, installation interrupted.\n"
@@ -50,6 +59,7 @@ pratition()
   parted /dev/"$disk" mkpart primary 512MiB 100%
   yes | mkfs.fat -F32 -v -I "$efi_pname"
   yes | mkfs.ext4 "$root"
+  parted "/dev/$disk" set 1 boot on 
 }
 
 setup()
