@@ -204,7 +204,11 @@ enable_multilib()
 
   old="\#Include = \/etc\/pacman.d\/mirrorlist"
   new="Include = \/etc\/pacman.d\/mirrorlist"
-  sed -i "s/$old/$new/" $pacfile
+
+  # Start at line 0, continue until you match '$old', execute the substitution in curly brackets.
+  tac $pacfile | sed "0,/$old/{s/$old/$new/}" | tac  > temp.txt
+  cp temp.txt $pacfile
+  rm temp.txt
 
   pacman -Syu --noconfirm
 }
