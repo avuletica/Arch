@@ -195,6 +195,20 @@ install_package_manager()
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
 
+enable_multilib()
+{
+  old="\#\[multilib\]"
+  new="\[multilib\]"
+  pacfile="/etc/pacman.conf"
+  sed -i "s/$old/$new/" $pacfile
+
+  old="\#Include = \/etc\/pacman.d\/mirrorlist"
+  new="Include = \/etc\/pacman.d\/mirrorlist"
+  sed -i "s/$old/$new/" $pacfile
+
+  pacman -Syu --noconfirm
+}
+
 error_1()
 {  
   case $option_1 in
@@ -235,3 +249,4 @@ configure_users
 configure_bootloader
 install_essential_packages
 setup_desktop_env
+enable_multilib
