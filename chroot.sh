@@ -208,6 +208,11 @@ enable_multilib()
   tac $pacfile | sed "0,/$old/{s/$old/$new/}" | tac  > temp.txt
   cp temp.txt $pacfile
   rm temp.txt
+  
+  # Enable color option
+  old="#Color"
+  new="Color"  
+  sed -i "s/$old/$new/" $pacfile
 
   pacman -Syu --noconfirm
 }
