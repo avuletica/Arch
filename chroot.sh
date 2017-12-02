@@ -103,7 +103,7 @@ install_essential_packages()
   pacman -S git vim openssh ntfs-3g bash-completion --noconfirm
 }
 
-setup_desktop_env()
+setup_environment()
 {
   local option_chosen     
  
@@ -118,7 +118,7 @@ setup_desktop_env()
   done
 
   if [ "$option_1" == "wm" ] || [ "$option_1" == "2" ]; then
-    install_i3
+    install_i3_gaps
     return 0;
   fi
 
@@ -138,9 +138,8 @@ setup_desktop_env()
     2|kde)  install_kde;;
     3|cinnamon)  install_cinnamon;;
     4|xfce)  install_xfce;;
-  esac
+  esac  
   
-  install_package_manager
 }
 
 install_gnome()
@@ -162,21 +161,21 @@ install_kde()
 
 install_xfce()
 {
-    pacman -S xfce4 --noconfirm
-    systemctl enable lightdm
-    systemctl enable NetworkManager
+  pacman -S xfce4 --noconfirm
+  systemctl enable lightdm
+  systemctl enable NetworkManager
 }
 
 install_cinnamon()
 {
-    pacman -S cinnamon --noconfirm
-    systemctl enable lightdm
-    systemctl enable NetworkManager
+  pacman -S cinnamon --noconfirm
+  systemctl enable lightdm
+  systemctl enable NetworkManager
 }
 
-install_i3()
+install_i3_gaps()
 {
-  echo "TBA"
+  pacaur -S i3-gaps-git --noconfirm
 }
 
 install_package_manager()
@@ -252,5 +251,6 @@ setup_timezone
 configure_users
 configure_bootloader
 install_essential_packages
-setup_desktop_env
+install_package_manager
+setup_environment
 enable_multilib
