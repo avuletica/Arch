@@ -5,23 +5,23 @@ startup()
   lsblk
   echo -e "\nOn which device you want to install Arch Linux? (e.g sda)\n"
   read -r disk
-  
+
   efi_pname="/dev/$disk"
   root="/dev/$disk"
-  
-  if [[ $disk == "sd"* ]]; 
-  then  
+
+  if [[ $disk == "sd"* ]];
+  then
     efi_pname+="1"
     root+="2"
-  elif [[ $disk == "nvme"* ]]; 
-  then  
+  elif [[ $disk == "nvme"* ]];
+  then
     efi_pname+="p1"
     root+="p2"
   else
     echo "Device not supported, installation interrupted."
     exit
-  fi    
-  
+  fi
+
   export efi_pname
   export root
   export disk
@@ -36,19 +36,19 @@ startup()
 
   if [ -b /dev/"$disk" ];
   then
-    firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)    
+    firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)
     if [  "$firmware" == "UEFI"  ]
     then
         parted "/dev/$disk" mklabel GPT
-        pratition             
+        pratition
     else
         parted "/dev/$disk" mklabel msdos
-        pratition              
-    fi    
+        pratition
+    fi
   else
     echo -e "\nSelected device does not exist, installation interrupted.\n"
     exit
-  fi  
+  fi
 
   mount "$root" /mnt
   mkdir /mnt/boot
@@ -63,7 +63,7 @@ pratition()
   parted /dev/"$disk" mkpart primary 512MiB 100%
   yes | mkfs.fat -F32 -v -I "$efi_pname"
   yes | mkfs.ext4 "$root"
-  parted "/dev/$disk" set 1 boot on 
+  parted "/dev/$disk" set 1 boot on
 }
 
 setup()

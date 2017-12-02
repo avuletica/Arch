@@ -50,16 +50,16 @@ setup_timezone()
 }
 
 configure_bootloader()
-{   
-    firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)
-    if [  "$firmware" == "BIOS"  ]
-    then        
-        pacman -S grub os-prober --noconfirm        
-        grub-install --target=i386-pc "/dev/$disk"
-        grub-mkconfig -o /boot/grub/grub.cfg       
-    else    
-        configure_systemd        
-    fi    
+{
+  firmware=$([ -d /sys/firmware/efi ] && echo UEFI || echo BIOS)
+  if [  "$firmware" == "BIOS"  ]
+  then
+      pacman -S grub os-prober --noconfirm
+      grub-install --target=i386-pc "/dev/$disk"
+      grub-mkconfig -o /boot/grub/grub.cfg
+  else
+      configure_systemd
+  fi
 }
 
 configure_systemd()
@@ -105,16 +105,16 @@ install_essential_packages()
 
 setup_environment()
 {
-  local option_chosen     
- 
+  local option_chosen
+
   display_message_1
-  read -r first_choice  
+  read -r first_choice
   option_chosen=$(error_1 $option_1)
-  
+
   while [ "$option_chosen" == "-1" ]; do
     display_message_1
-    read -r first_choice   
-    option_chosen=$(error_1 $option_1)       
+    read -r first_choice
+    option_chosen=$(error_1 $option_1)
   done
 
   if [ "$option_1" == "wm" ] || [ "$option_1" == "2" ]; then
@@ -124,12 +124,12 @@ setup_environment()
 
   if [ "$option_1" == "de" ] || [ "$option_1" == "1" ] || [ "$option_1" == "" ];  then
     display_message_2
-    read -r second_choice 
-    option_chosen=$(error_2 $option_2)  
+    read -r second_choice
+    option_chosen=$(error_2 $option_2)
     while [ "$option_chosen" == "-1"  ]; do
-      display_message_2 
+      display_message_2
       read -r second_choice
-      option_chosen=$(error_2 $option_2)      
+      option_chosen=$(error_2 $option_2)
     done
   fi
 
@@ -138,8 +138,8 @@ setup_environment()
     2|kde)  install_kde;;
     3|cinnamon)  install_cinnamon;;
     4|xfce)  install_xfce;;
-  esac  
-  
+  esac
+
 }
 
 install_gnome()
@@ -184,13 +184,13 @@ install_package_manager()
   git clone https://aur.archlinux.org/pacaur.git /tmp/pacaur
 
   chown -R "$usrnm" /tmp/cower
-  chown -R "$usrnm" /tmp/pacaur 
+  chown -R "$usrnm" /tmp/pacaur
 
   cd /tmp/cower
   su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
-  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm" 
-  
+  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
+
   sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
 
@@ -208,47 +208,47 @@ enable_multilib()
   tac $pacfile | sed "0,/$old/{s/$old/$new/}" | tac  > temp.txt
   cp temp.txt $pacfile
   rm temp.txt
-  
+
   # Enable color option
   old="#Color"
-  new="Color"  
+  new="Color"
   sed -i "s/$old/$new/" $pacfile
 
   pacman -Syu --noconfirm
 }
 
 error_1()
-{  
+{
   case $option_1 in
     1|2|de|wm|"") echo 0;;
     *) echo -1;;
-  esac  
+  esac
 }
 
 error_2()
-{  
+{
   case $option_2 in
     1|2|3|4|gnome|kde|xfce|cinnamon|"") echo 0;;
     *) echo -1;;
-  esac  
+  esac
 }
 
 
 display_message_1()
 {
   echo -e "\nInstall desktop environment or window manager?\n"
-  echo -e "1)de (default)\n2)wm" 
+  echo -e "1)de (default)\n2)wm"
 }
 
 display_message_2()
 {
   echo -e "\nChoose desktop environment"
-  echo -e "1)gnome (default)\n2)kde\n3)cinnamon\n4)xfce" 
+  echo -e "1)gnome (default)\n2)kde\n3)cinnamon\n4)xfce"
 }
 
 display_message_3()
 {
-    echo "Invalid (empty) name, please try again."
+  echo "Invalid (empty) name, please try again."
 }
 
 setup_locale
