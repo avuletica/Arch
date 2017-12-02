@@ -118,7 +118,7 @@ setup_environment()
   done
 
   if [ "$option_1" == "wm" ] || [ "$option_1" == "2" ]; then
-    install_i3_gaps
+    install_i3
     return 0;
   fi
 
@@ -173,10 +173,11 @@ install_cinnamon()
   systemctl enable NetworkManager
 }
 
-install_i3_gaps()
+install_i3()
 {
-  su -c "pacaur -S xorg-xinit --noconfirm" -s /bin/sh "$usrnm"
-  su -c "pacaur -S i3-gaps --noconfirm" -s /bin/sh "$usrnm"  
+  pacman -S xorg-server xorg-xinit --noconfirm
+  pacman -S i3 --noconfirm
+  echo "exec i3" >> ~/.xinitrc  
 }
 
 install_package_manager()
