@@ -108,12 +108,12 @@ setup_environment()
   local option_chosen
 
   display_message_1
-  read -r first_choice
+  read -r option_1
   option_chosen=$(error_1 $option_1)
 
   while [ "$option_chosen" == "-1" ]; do
     display_message_1
-    read -r first_choice
+    read -r option_1
     option_chosen=$(error_1 $option_1)
   done
 
@@ -175,7 +175,8 @@ install_cinnamon()
 
 install_i3_gaps()
 {
-  pacaur -S i3-gaps-git --noconfirm
+  su -c "pacaur -S xorg-xinit --noconfirm" -s /bin/sh "$usrnm"
+  su -c "pacaur -S i3-gaps --noconfirm" -s /bin/sh "$usrnm"  
 }
 
 install_package_manager()
@@ -190,8 +191,6 @@ install_package_manager()
   su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
   cd /tmp/pacaur
   su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
-
-  sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 }
 
 enable_multilib()
