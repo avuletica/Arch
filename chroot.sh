@@ -124,11 +124,11 @@ setup_environment()
 
   if [ "$option_1" == "de" ] || [ "$option_1" == "1" ] || [ "$option_1" == "" ];  then
     display_message_2
-    read -r second_choice
+    read -r option_2
     option_chosen=$(error_2 $option_2)
     while [ "$option_chosen" == "-1"  ]; do
       display_message_2
-      read -r second_choice
+      read -r option_2
       option_chosen=$(error_2 $option_2)
     done
   fi
