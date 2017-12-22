@@ -92,7 +92,7 @@ configure_systemd()
     echo "linux /vmlinuz-linux" >> arch.conf
     echo "initrd /initramfs-linux.img" >> arch.conf
     partuuid=$(blkid -s PARTUUID -o value $root)
-    echo $options$partuuid "rw" >> arch.conf
+    echo $options$partuuid "rw quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log-priority=3" >> arch.conf
   fi
 
   mv arch.conf boot/loader/entries/arch.conf
