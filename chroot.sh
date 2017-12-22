@@ -147,6 +147,7 @@ install_gnome()
   pacman -S gnome gnome-tweak-tool --noconfirm
   pacman -S file-roller unrar lrzip --noconfirm
   pacman -S gedit transmission-gtk --noconfirm
+  pacman -S gst-libav gst-plugins-ugly --noconfirm
   systemctl enable gdm
   systemctl enable NetworkManager
 }
