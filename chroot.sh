@@ -80,19 +80,20 @@ configure_systemd()
 
   touch arch.conf
   options="options root=PARTUUID="
+  other_params=" rw quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log-priority=3"
   if [ $intel_cpu ]; then
     echo "title Arch Linux" > arch.conf
     echo "linux /vmlinuz-linux" >> arch.conf
     echo "initrd /intel-ucode.img" >> arch.conf
     echo "initrd /initramfs-linux.img" >> arch.conf
     partuuid=$(blkid -s PARTUUID -o value $root)
-    echo $options$partuuid "rw" >> arch.conf
+    echo $options$partuuid$other_params >> arch.conf
   else
     echo "title Arch Linux" > arch.conf
     echo "linux /vmlinuz-linux" >> arch.conf
     echo "initrd /initramfs-linux.img" >> arch.conf
     partuuid=$(blkid -s PARTUUID -o value $root)
-    echo $options$partuuid "rw quiet loglevel=3 rd.systemd.show_status=auto rd.udev.log-priority=3" >> arch.conf
+    echo $options$partuuid$other_params >> arch.conf
   fi
 
   mv arch.conf boot/loader/entries/arch.conf
