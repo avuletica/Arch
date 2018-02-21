@@ -70,6 +70,8 @@ setup()
 {
   pacstrap /mnt base base-devel
   genfstab -U -p /mnt >> /mnt/etc/fstab
+  echo "Server = http://archlinux.mirrors.linux.ro/\$repo/os/\$arch" > /mnt/etc/pacman.d/mirrorlist 
+ 
   wget https://raw.githubusercontent.com/avuletica/Arch/master/chroot.sh
   cp ./chroot.sh /mnt
   chmod +x /mnt/chroot.sh
