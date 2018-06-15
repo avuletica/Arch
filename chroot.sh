@@ -102,6 +102,7 @@ configure_systemd()
 install_essential_packages()
 {
   pacman -S git vim openssh ntfs-3g bash-completion --noconfirm
+  pacman -S unzip, unrar, p7zip --noconfirm
 }
 
 setup_environment()
