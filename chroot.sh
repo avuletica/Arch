@@ -184,17 +184,14 @@ install_i3()
   echo "exec i3" >> ~/.xinitrc  
 }
 
-install_package_manager()
+install_aur_helper()
 {
-  git clone https://aur.archlinux.org/cower.git /tmp/cower
-  git clone https://aur.archlinux.org/pacaur.git /tmp/pacaur
+  pacman -S go --noconfirm
+  git clone https://aur.archlinux.org/yay.git /tmp/yay
 
-  chown -R "$usrnm" /tmp/cower
-  chown -R "$usrnm" /tmp/pacaur
+  chown -R "$usrnm" /tmp/yay
 
-  cd /tmp/cower
-  su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
-  cd /tmp/pacaur
+  cd /tmp/yay
   su -c "makepkg --skippgpcheck -si --noconfirm" -s /bin/sh "$usrnm"
 }
 
@@ -260,6 +257,6 @@ setup_timezone
 configure_users
 configure_bootloader
 install_essential_packages
-install_package_manager
+install_aur_helper
 setup_environment
 enable_multilib
