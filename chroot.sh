@@ -158,6 +158,7 @@ install_kde()
 {
   pacman -S plasma konsole dolphin --noconfirm
   pacman -S gwenview okular ffmpegthumbs --noconfirm
+  pacman -S kate, ark, spectacle, kdialog --noconfirm
   systemctl enable sddm
   systemctl enable NetworkManager
 }
